@@ -1,17 +1,19 @@
 version: '3.8'
 services:
   backend:
-    build: ./Node
+    image: backend
     ports:
       - "3000:3000"
     depends_on:
       - db
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/postgres
+
   frontend:
-    build: ./React
+    image: frontend
     ports:
       - "80:80"
+
   db:
     image: postgres:latest
     environment:

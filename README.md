@@ -13,7 +13,7 @@ The Docker files are in the Node and React folders, the docker-compose is in the
 - If we are using Kubernetes, set up the Horizontal Pod Autoscaler (HPA) to scale the application pods based on resource utilization metrics.
 
 ## Question 4:
-1. The Jenkinsfile is in the root directory.
+1. The Jenkinsfile is in the root directory.(sorry it's in light mode, I forgot to turn on darkmode)
 ![Alt text](./images/0.png)
 - The provided Jenkins pipeline sets up a basic CI/CD environment. It uses agent any to run on any available Jenkins agent. The environment block defines three variables: DOCKER_REGISTRY for the Docker Hub URL, and DOCKER_IMAGE_FRONTEND and DOCKER_IMAGE_BACKEND for the names of the frontend and backend Docker images. This configuration standardizes the references to the Docker registry and image names across the pipeline.
 ![Alt text](./images/1.png)

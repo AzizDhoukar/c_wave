@@ -1,14 +1,14 @@
 version: '3.8'
 services:
   backend:
-    image: backend
+    build: ./Node
     ports:
       - "3000:3000"
     networks:
       - app_network
       
   frontend:
-    image: frontend
+    build: ./React/cwave
     ports:
       - "80:80"
 

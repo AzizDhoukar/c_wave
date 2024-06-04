@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_REGISTRY = 'https://registry.hub.docker.com'
+        DOCKER_IMAGE_FRONTEND = 'azizdhoukar/frontend'
+        DOCKER_IMAGE_BACKEND = 'azizdhoukar/backend'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the repository
+                git branch: main, url: 'https://github.com/AzizDhoukar/c_wave'
+            }
+        }
+        
+        stage('Build Docker Images') {
+            steps {
+                // Build Docker images for frontend, backend, and database
+                script {
+                    docker.build("${DOCKER_IMAGE_FRONTEND}:latest", "./React/c_wave")
+                    docker.build("${DOCKER_IMAGE_BACKEND}:latest", "./Node")
+                }
+            }
+        }
+        
+        stage('Push Docker Images') {
+            steps {
+                // Push Docker images to the registry
+                script {
+                    docker.withRegistry("${DOCKER_REGISTRY}", 'docker-credentials') {
+                        docker.image("${DOCKER_IMAGE_FRONTEND}:latest").push()
+                        docker.image("${DOCKER_IMAGE_BACKEND}:latest").push()
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // SSH into target environment and deploy using Docker Compose
+                sshagent(['your-ssh-credentials']) {
+                    sh 'ssh user@your-target-server "docker-compose -f /path/to/docker-compose.yml up -d"'
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up Docker images after deployment
+            script {
+                docker.image("${DOCKER_IMAGE_FRONTEND}:latest").remove()
+                docker.image("${DOCKER_IMAGE_BACKEND}:latest").remove()
+                docker.image("${DOCKER_IMAGE_DATABASE}:latest").remove()
+            }
+        }
+    }
+}
